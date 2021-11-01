@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  sequence_db:
+    container_name: sequencedb_mysql8
+    image: mysql:8.0
+    command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sequence_db
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - '3306:3306'
+    volumes:
+      - data:/var/lib/mysql
+      #- './.docker/db/data:/var/lib/mysql'
+
+  redis:
+    image: 'redis:6-alpine'
+    container_name: redis
+    command:
+      --port 6395
+    ports:
+      - '6395:6395'
+
+#  elasticache:
+#    image: dazoakley/fake-elasticache
+#    ports:
+#      - 11212:11212
+#    links:
+#      - memcached
+#    container_name: elasticache
+  memcached:
+    image: memcached
+    container_name: memcached
+    ports:
+      - 11211:11211
+
+volumes:
+  data:
